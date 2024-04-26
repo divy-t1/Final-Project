@@ -18,7 +18,7 @@ public class mazeWallScript : MonoBehaviour
         
     }
 
-    void OnCollisionEnter (Collision collision) {
+    private void OnCollisionEnter2D (Collision2D collision) {
         if (collision.gameObject.name == "Maze Walls") {
             charRB.velocity = Vector3.zero; 
             
