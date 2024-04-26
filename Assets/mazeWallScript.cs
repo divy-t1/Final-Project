@@ -20,9 +20,9 @@ public class mazeWallScript : MonoBehaviour
 
     private void OnCollisionEnter2D (Collision2D collision) {
         if (collision.gameObject.name == "Maze Walls") {
-            charRB.velocity = Vector3.zero; 
-            
+            charRB.velocity = Vector3.back* 5; 
         }
+        Debug.Log("Collided with wall");  
         
     }
 }
