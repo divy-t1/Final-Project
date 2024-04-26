@@ -22,12 +22,13 @@ public class movementScript : MonoBehaviour
     void Update()
     {
 
-        Move(GetDirection()); 
+        //Move(GetDirection()); 
+        
+        var move = new UnityEngine.Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0F); 
+        //charRB.MovePosition(move * speed * Time.deltaTime);
+        transform.position += move * speed * Time.deltaTime;
+        
         /*
-        var move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0F); 
-        charRB.MovePosition(move * speed * Time.deltaTime);
-        
-        
         if (Input.GetKey(KeyCode.LeftArrow)) {
             transform.position += Vector3.left * speed * Time.deltaTime;
         }
@@ -42,7 +43,7 @@ public class movementScript : MonoBehaviour
         } 
         */
     }
-
+/*
     private void Move(UnityEngine.Vector2 direction) {
         charRB.AddForce(direction.normalized * speed * Time.deltaTime); 
     }
@@ -52,4 +53,5 @@ public class movementScript : MonoBehaviour
         float vertical = Input.GetAxis("Vertical"); 
         return new UnityEngine.Vector2(horizontal, vertical); 
     }
+    */
 }
