@@ -6,6 +6,7 @@ public class portalScript : MonoBehaviour
 {
     // Start is called before the first frame update
     public Rigidbody2D charRB;
+    public HealthScript healthScript; 
 
     void Start()
     {
@@ -24,6 +25,11 @@ public class portalScript : MonoBehaviour
         if (collision.gameObject.name == "Circle") {
             transform.position = new Vector3(-10.62f, 3.614f, 0.00f); 
             charRB.velocity = Vector3.zero; 
+
+            //var healthComponent =  
+            if (healthScript.currentHealth >= 0) {
+                //healthScript.TakeDamage(1); 
+            }
 
         }
         Debug.Log("Trigger enter"); 

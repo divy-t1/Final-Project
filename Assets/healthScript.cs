@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class healthScript : MonoBehaviour
+public class HealthScript : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int maxHealth = 3; 
+    public int maxHealth = 10; 
     public int currentHealth; 
-    public Animator anim; 
-    void Start()
+       void Start()
     {
         currentHealth = maxHealth; 
     }
@@ -23,7 +22,8 @@ public class healthScript : MonoBehaviour
         currentHealth -= amount; 
 
         if (currentHealth <= 0) {
-            anim.SetBool("IsDead", true); 
+            //when health is lower or equal to zero, game should be over 
+            //add script later 
         }
     }
 
