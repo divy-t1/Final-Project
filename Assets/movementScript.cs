@@ -22,36 +22,17 @@ public class movementScript : MonoBehaviour
     void Update()
     {
 
-        //Move(GetDirection()); 
-        
         var move = new UnityEngine.Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0F); 
         //charRB.MovePosition(move * speed * Time.deltaTime);
         transform.position += move * speed * Time.deltaTime;
-        
-        /*
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            transform.position += Vector3.left * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.RightArrow)) {
-            transform.position += Vector3.right * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.UpArrow)) {
-            transform.position += Vector3.up * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.DownArrow)) {
-                transform.position += Vector3.down * speed * Time.deltaTime;
-        } 
-        */
-    }
-/*
-    private void Move(UnityEngine.Vector2 direction) {
-        charRB.AddForce(direction.normalized * speed * Time.deltaTime); 
+
     }
 
-    private UnityEngine.Vector2 GetDirection() {
-        float horizontal = Input.GetAxis("Horizontal"); 
-        float vertical = Input.GetAxis("Vertical"); 
-        return new UnityEngine.Vector2(horizontal, vertical); 
+    private void OnCollisionEnter2D (Collision2D collision) {
+        if (collision.gameObject.name == "Maze Walls") {
+            charRB.velocity = UnityEngine.Vector3.back* 5; 
+        }
+        Debug.Log("Collided with wall");  
+        
     }
-    */
 }
