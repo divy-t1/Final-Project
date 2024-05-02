@@ -18,6 +18,7 @@ public class portalScript : MonoBehaviour
     Anything else will reduce scalability and increase the amount of maintenance for your project.
     */
     public Rigidbody2D charRB;
+    //public GameObject respawn = GameObject.FindWithTag("Respawn"); 
     
     
 
@@ -35,9 +36,10 @@ public class portalScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision) {
         //float speed = 5F; 
         //Vector3 m_Input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        if (collision.gameObject.name == "Circle") {
-            transform.position = new Vector3(-10.62f, 3.614f, 0.00f); 
+        if (collision.gameObject.name == "Trap") {
+            transform.position = new Vector3(1.55f, -0.22f, 0.00f); 
             charRB.velocity = Vector3.zero; 
+            //transform.position = respawn.transform.position; 
 
         
 
