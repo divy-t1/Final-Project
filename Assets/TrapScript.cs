@@ -8,12 +8,6 @@ public class TrapScript : MonoBehaviour
 {
     public int damage = 10; 
     private Rigidbody2D charRB; 
-
-    public GameObject objectToSpawn; 
-
-    public float timeToSpawn; 
-
-    private float currentTimeToSpawn; 
     
     // Start is called before the first frame update
     void Start()

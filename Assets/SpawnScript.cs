@@ -15,7 +15,7 @@ public class SpawnScript : MonoBehaviour
    } 
 
    void Update() {
-    if(currentTimeToSpawn > 0) {
+        if(currentTimeToSpawn > 0) {
             currentTimeToSpawn -= Time.deltaTime; 
         } else {
             spawnObject(); 
