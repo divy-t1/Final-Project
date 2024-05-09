@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class SpawningScript : MonoBehaviour
 {
-    public GameObject healthBuffPrefab; // Reference to the prefab to spawn for the health buff
+    public GameObject healthBuffPrefab; // The value reference to the health buff prefab
     public float spawnDelay = 10f; // Delay before spawning the prefab
 
     
 
-    // Call this method to spawn the health buff prefab after a delay
+    // Calling this method to spawn the health buff prefab after a delay
     public void SpawnHealthBuffPrefabDelayed()
     {
         Debug.Log("Health buff spawning in " + spawnDelay + " seconds.");
         Invoke("SpawnHealthBuffPrefab", spawnDelay);
     }
 
-    // Spawn the health buff prefab
+    //Method to spawn the health buff prefab
     private void SpawnHealthBuffPrefab()
     {
         // Spawn the prefab

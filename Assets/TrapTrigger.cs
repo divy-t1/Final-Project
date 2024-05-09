@@ -10,6 +10,9 @@ public class TrapTrigger : MonoBehaviour
     private Rigidbody2D rb; 
     public HealthBar healthBar; 
     public PlayerHealth playerHealth; 
+    public GameObject trapPrefab; 
+    public bool isTriggered; 
+
     void Start()
     {
         if (playerHealth == null)
@@ -31,7 +34,46 @@ public class TrapTrigger : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        playerHealth.currentHealth += damage; 
-        healthBar.SetHealth(playerHealth.currentHealth);
+        if(!isTriggered && collision.gameObject.tag == "Player"){
+            Debug.Log("Player collided with a trap.");
+            if (playerHealth != null && healthBar != null) {
+                GameObject p = collision.gameObject;
+                rb = p.GetComponent<Rigidbody2D>();
+                p.transform.position = new Vector3(1.55f, -0.22f, 0.00f); 
+                p.GetComponent<PlayerHealth>().TakeDamage(damage);
+            } else {
+                Debug.LogError("PlayerHealth or HealthBar reference is null.");
+            }
+            Destroy(gameObject);
+            
+            // Spawn the trap prefab immediately by checking if the field for prefab is null or not
+            if (trapPrefab != null) {
+                SpawnTrapPrefab();
+            } else {
+                Debug.LogError("TrapPrefab reference is null.");
+            }
+
+            // Debug message for collision and spawning
+            Debug.Log("Trap triggered by: " + collision.gameObject.name);
+            Debug.Log("Trap spawned immediately.");
+
+            isTriggered = true; 
+        }
+    }
+
+    private void SpawnTrapPrefab()
+    {
+        // Instantiate the health buff prefab at the location of the prefab itself
+        GameObject spawnedTrap = Instantiate(trapPrefab, transform.position, Quaternion.identity);
+
+        // Debug message after spawning
+        if (spawnedTrap != null)
+        {
+            Debug.Log("Health buff spawned at: " + spawnedTrap.transform.position);
+        }
+        else
+        {
+            Debug.LogError("Failed to spawn the trap prefab!");
+        }
     }
 }
