@@ -10,10 +10,16 @@ public class PlayerHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+        if (healthBar == null)
+        {
+            Debug.LogWarning("HealthBar reference is not assigned.");
+        }
         currentHealth = maxHealth; 
         healthBar.SetMaxHealth(maxHealth); 
+        
     }
-
+    
     // Update is called once per frame
     void Update()
     {

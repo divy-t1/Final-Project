@@ -12,8 +12,17 @@ public class TrapTrigger : MonoBehaviour
     public PlayerHealth playerHealth; 
     void Start()
     {
+        if (playerHealth == null)
+        {
+            Debug.LogWarning("PlayerHealth reference is not assigned.");
+        }
+        if (healthBar == null)
+        {
+            Debug.LogWarning("HealthBar reference is not assigned.");
+        }
         
     }
+
 
     // Update is called once per frame
     void Update()
