@@ -6,12 +6,11 @@ using UnityEngine.UI;
 public class TrapTrigger : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int damage; 
-    private Rigidbody2D rb; 
+    public int damage;  
     public HealthBar healthBar; 
     public PlayerHealth playerHealth; 
     public GameObject trapPrefab; 
-    public bool isTriggered; 
+    //private bool isTriggered; 
 
     void Start()
     {
@@ -34,19 +33,19 @@ public class TrapTrigger : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if(!isTriggered && collision.gameObject.tag == "Player"){
-            Debug.Log("Player collided with a trap.");
+        //if(!isTriggered && collision.gameObject.tag == "Player"){
+        if(collision.gameObject.tag == "Player"){
+            Debug.Log("Player collided with a " + gameObject.name);
             if (playerHealth != null && healthBar != null) {
-                GameObject p = collision.gameObject;
-                rb = p.GetComponent<Rigidbody2D>();
-                p.transform.position = new Vector3(1.55f, -0.22f, 0.00f); 
-                p.GetComponent<PlayerHealth>().TakeDamage(damage);
+                playerHealth.currentHealth -= damage; 
+                healthBar.SetHealth(playerHealth.currentHealth); 
+                collision.transform.position = new Vector3(1.55f, -0.22f, 0); 
             } else {
                 Debug.LogError("PlayerHealth or HealthBar reference is null.");
             }
             Destroy(gameObject);
             
-            // Spawn the trap prefab immediately by checking if the field for prefab is null or not
+            /* Spawn the trap prefab immediately by checking if the field for prefab is null or not
             if (trapPrefab != null) {
                 SpawnTrapPrefab();
             } else {
@@ -55,9 +54,9 @@ public class TrapTrigger : MonoBehaviour
 
             // Debug message for collision and spawning
             Debug.Log("Trap triggered by: " + collision.gameObject.name);
-            Debug.Log("Trap spawned immediately.");
+            Debug.Log("Trap spawned immediately."); */
 
-            isTriggered = true; 
+            //isTriggered = true; 
         }
     }
 
@@ -67,12 +66,9 @@ public class TrapTrigger : MonoBehaviour
         GameObject spawnedTrap = Instantiate(trapPrefab, transform.position, Quaternion.identity);
 
         // Debug message after spawning
-        if (spawnedTrap != null)
-        {
+        if (spawnedTrap != null) {
             Debug.Log("Health buff spawned at: " + spawnedTrap.transform.position);
-        }
-        else
-        {
+        } else {
             Debug.LogError("Failed to spawn the trap prefab!");
         }
     }

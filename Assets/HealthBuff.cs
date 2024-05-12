@@ -42,7 +42,7 @@ public class HealthBuff : MonoBehaviour
             }
             Destroy(gameObject);
             
-            // Spawn the health buff prefab immediately by checking if the field for prefab is null or not
+            /* Spawn the health buff prefab immediately by checking if the field for prefab is null or not
             if (healthBuffPrefab != null) {
                 SpawnHealthBuffPrefab();
             } else {
@@ -51,8 +51,7 @@ public class HealthBuff : MonoBehaviour
 
             // Debug message for collision and spawning
             Debug.Log("Health buff triggered by: " + collision.gameObject.name);
-            Debug.Log("Health buff spawned immediately.");
-
+            Debug.Log("Health buff spawned immediately."); */
             isTriggered = true; 
 
             //Destroy(gameObject); 
