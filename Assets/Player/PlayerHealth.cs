@@ -26,7 +26,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount){
         currentHealth += amount; 
-
+        Debug.Log("Healing " + amount); 
         healthBar.SetHealth(currentHealth); 
     }
 
@@ -53,7 +53,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage) {
         currentHealth -= damage; 
-        Debug.Log("take damage");
+        Debug.Log("damage by " + damage);
         healthBar.SetHealth(currentHealth);
         isTakingDamage = false;  
     }

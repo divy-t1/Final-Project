@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 6477381720984261523}
   - component: {fileID: 5047055338501486234}
   - component: {fileID: 9098257452166965282}
+  - component: {fileID: 1998309482121211161}
   m_Layer: 0
   m_Name: Healh Power Up
-  m_TagString: Untagged
+  m_TagString: Power Up
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,4 +147,23 @@ MonoBehaviour:
   amount: 20
   healthBar: {fileID: 0}
   playerHealth: {fileID: 0}
-  spawnScript: {fileID: 0}
+  spawningScript: {fileID: 1998309482121211161}
+--- !u!114 &1998309482121211161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5972491603426006048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa31300a00fa27544989826af15ef82d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObject: {fileID: 5972491603426006048}
+  delay: 2
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
