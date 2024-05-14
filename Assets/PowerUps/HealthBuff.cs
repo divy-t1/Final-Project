@@ -13,21 +13,21 @@ public class HealthBuff : MonoBehaviour
     public PlayerHealth playerHealth; 
     //reference to the player health system of the player it collides with
     public GameManager gameManager; 
-    public GameManager.SpawnableObject spawnableObject; 
-    //reference to the game manager that must be attatched to same object
+    
     
  
     void Start()
     { // checks whether any reference in the game editor is null
         if (playerHealth == null) {
             Debug.LogWarning("PlayerHealth reference is not assigned.");
+            playerHealth = FindObjectOfType<PlayerHealth>(); 
         } if (healthBar == null) {
             Debug.LogWarning("HealthBar reference is not assigned.");
+            healthBar = FindObjectOfType<HealthBar>(); 
         } if (gameManager == null) {
             Debug.LogWarning("GameManager reference is not assigned.");
-        } 
-
-        gameManager = FindObjectOfType<GameManager>(); //find the game manager in the object components 
+            gameManager = FindObjectOfType<GameManager>(); // Find GameManager in the scene
+        }
     
     }
 
@@ -46,8 +46,9 @@ public class HealthBuff : MonoBehaviour
                 Debug.LogError("PlayerHealth or HealthBar reference is null.");
             }
 
-            Destroy(gameObject); 
-            gameManager.ObjectDestroyed(spawnableObject);
+            Destroy(gameObject); // destroyes the health buff
+            // tells the game manager that a prefab has been destroyed and to spawn another  
+            gameManager.PrefabDestroyed(); 
            
         }
     }

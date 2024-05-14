@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 9164272709711667083}
   - component: {fileID: 6477381720984261523}
   - component: {fileID: 5047055338501486234}
-  - component: {fileID: 9098257452166965282}
-  - component: {fileID: 1998309482121211161}
+  - component: {fileID: -3292337903413678474}
   m_Layer: 0
   m_Name: Healh Power Up
   m_TagString: Power Up
@@ -132,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &9098257452166965282
+--- !u!114 &-3292337903413678474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,26 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045227c52010e564c87028f7310d14ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 20
+  amount: 10
   healthBar: {fileID: 0}
   playerHealth: {fileID: 0}
-  spawningScript: {fileID: 1998309482121211161}
---- !u!114 &1998309482121211161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5972491603426006048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa31300a00fa27544989826af15ef82d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetObject: {fileID: 5972491603426006048}
-  delay: 2
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  gameManager: {fileID: 0}
