@@ -12,12 +12,10 @@ public class HealthBuff : MonoBehaviour
     //reference to the healthbar that changes with teh collision
     public PlayerHealth playerHealth; 
     //reference to the player health system of the player it collides with
-    public SpawningScript spawningScript; 
-    //reference to a spawning script that must be attatched to same object
+    public GameManager gameManager; 
+    public GameManager.SpawnableObject spawnableObject; 
+    //reference to the game manager that must be attatched to same object
     
-    //getting the game objects collider2d and sprite renderes in order to disable later 
-    new Collider2D collider2D; 
-    private SpriteRenderer spriteRenderer; 
  
     void Start()
     { // checks whether any reference in the game editor is null
@@ -25,43 +23,36 @@ public class HealthBuff : MonoBehaviour
             Debug.LogWarning("PlayerHealth reference is not assigned.");
         } if (healthBar == null) {
             Debug.LogWarning("HealthBar reference is not assigned.");
-        } if (spawningScript == null) {
-            Debug.LogWarning("SpawningScript reference is not assigned.");
+        } if (gameManager == null) {
+            Debug.LogWarning("GameManager reference is not assigned.");
         } 
 
-        collider2D = GetComponent<Collider2D>(); 
-        spriteRenderer = GetComponent<SpriteRenderer>(); 
+        gameManager = FindObjectOfType<GameManager>(); //find the game manager in the object components 
+    
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        
+        // check if collision is with player or not
         if(collision.gameObject.tag == "Player"){
             Debug.Log("Player collided with health buff.");
-            if (playerHealth != null && healthBar != null) { //check to see whether references are empty or not
+            
+            // check to see whether references are empty or not
+            if (playerHealth != null && healthBar != null) { 
+                // add to health bar to get the health buff effect 
                 playerHealth.currentHealth += amount; 
                 healthBar.SetHealth(playerHealth.currentHealth); 
             } else {
                 Debug.LogError("PlayerHealth or HealthBar reference is null.");
             }
 
-            collider2D.enabled = false; 
-            spriteRenderer.enabled = false; 
-
-            // Invoke the Spawn method after a delay
-            //Debug.Log("Invoking Spawn method with a delay of " + spawningScript.delay);
-            Invoke("Spawn", spawningScript.delay);
+            Destroy(gameObject); 
+            gameManager.ObjectDestroyed(spawnableObject);
            
         }
     }
 
-    private void Spawn() {
-        Debug.Log("Invoking Spawn method with a delay of " + spawningScript.delay);
-        spawningScript.Spawn(); 
-        collider2D.enabled = true; 
-        spriteRenderer.enabled = true; 
-        Destroy(gameObject); //destroys the game object after
-    }
+    
 
 
 }

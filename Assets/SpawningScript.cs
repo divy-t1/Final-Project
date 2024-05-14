@@ -51,7 +51,7 @@ public class SpawningScript : MonoBehaviour
         //send an error to track whether spawn even happened or not
         Debug.Log("Spawned at " + selectedSpawnPoint.name); 
         //spawn the same target object to the random position we got just now 
-        Instantiate(FindObjectOfType<Manager>().healthSpawn, position, Quaternion.identity); 
+        //Instantiate(FindObjectOfType<GameManager>().prefab, position, Quaternion.identity); 
 
     }
 }
