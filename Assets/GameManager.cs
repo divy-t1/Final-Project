@@ -12,13 +12,43 @@ public class GameManager : MonoBehaviour
     public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints 
     public int initialPrefabCount; // the count that the prefab should maintain and starts at 
     public int currentPrefabCount; // the count that changes and is monitered 
+    public PlayerHealth playerHealth;
+    public Transform playerTransform;
 
     void Start() {
         // spawn the initial prefabs 
         for (int i = 0; i < initialPrefabCount; i++) {
             SpawnPrefab(); 
         }
+
+        LoadPlayerData(); 
     } 
+
+    // Method to save player data
+    public void SavePlayerData()
+    {
+        SaveSystem.SavePlayer(this);
+    }
+    
+
+    public void LoadPlayerData()
+    {
+        PlayerData loadedData = SaveSystem.LoadPlayer();
+        if (loadedData != null)
+        {
+            playerHealth.SetHealth(loadedData.health);
+
+            // Set player position from loaded data
+            Vector3 position = new Vector3(loadedData.position[0], loadedData.position[1], loadedData.position[2]);
+            playerTransform.position = position;
+
+            // Other data loading operations...
+        }
+        else
+        {
+            Debug.LogError("Failed to load player data.");
+        }
+    }
 
     void SpawnPrefab() {
         if (currentPrefabCount >= initialPrefabCount)

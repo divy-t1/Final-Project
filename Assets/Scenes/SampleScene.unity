@@ -479,6 +479,8 @@ MonoBehaviour:
   - {fileID: 29912172}
   initialPrefabCount: 2
   currentPrefabCount: 1
+  playerHealth: {fileID: 1852609043}
+  playerTransform: {fileID: 1852609038}
 --- !u!1 &201005976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1419,9 +1421,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1852609043}
-        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
-        m_MethodName: LoadPlayer
+      - m_Target: {fileID: 161245293}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: LoadPlayerData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5851,6 +5853,7 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   healthBar: {fileID: 213372301}
+  damage: 10
 --- !u!1 &1865004241
 GameObject:
   m_ObjectHideFlags: 0
@@ -6266,9 +6269,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1852609043}
-        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
-        m_MethodName: SavePlayer
+      - m_Target: {fileID: 161245293}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: SavePlayerData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

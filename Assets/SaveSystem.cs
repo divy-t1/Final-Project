@@ -3,106 +3,63 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Data.Common;
 
-public static class SaveSystem { // a static class makes it so that the class isn't instantiatable and wont make multiple versions elsewhere 
-    private static readonly string path = Application.persistentDataPath + "/player.data"; 
-    
-        public static void SavePlayer(PlayerHealth playerHealth) {
-            BinaryFormatter formatter = new BinaryFormatter(); 
-            
-            FileStream stream = new FileStream(path, FileMode.Create);
-
-            PlayerData data = new PlayerData(playerHealth); //calling the contructor from the other class
-            //calls it and gets the same data from it instead of us having to set it up
-
-            try {
-                formatter.Serialize(stream, data);
-                Debug.Log("Player data saved successfully.");
-            } catch (System.Exception e) {
-                Debug.LogError("Failed to save player data: " + e.Message);
-            } finally {
-                stream.Close();
-            }  
-        }
-
-        public static PlayerData LoadPlayer() {
-
-            
-            if (File.Exists(path)) {
-                BinaryFormatter formatter = new BinaryFormatter(); 
-                try
-                {
-                    using (FileStream stream = new FileStream(path, FileMode.Open))
-                    {
-                        PlayerData data = formatter.Deserialize(stream) as PlayerData;
-                        Debug.Log("Player data loaded successfully.");
-                        return data;
-                    }
-                }
-                catch (IOException e)
-                {
-                    Debug.LogError("Failed to load player data: " + e.Message);
-                    return null;
-                }
-
-            } else {
-                Debug.LogError("Saved File not found in " + path); 
-                return null; 
-            }
-        }
-    
-}
-
-/* 
-using UnityEngine;
-using System.IO;
-using System.Text.Json;
-
 public static class SaveSystem
 {
-    private static readonly string path = Application.persistentDataPath + "/player.json";
+    // Adjust the path to save the player data
+    private static readonly string path = Application.persistentDataPath + "/player.data";
 
-    public static void SavePlayer(PlayerData playerData)
+    public static void SavePlayer(GameManager gameManager)
     {
+        BinaryFormatter formatter = new BinaryFormatter();
+        
+        FileStream stream = new FileStream(path, FileMode.Create);
+
+        // Get the position from the playerTransform in the GameManager
+        Vector3 position = gameManager.playerTransform.position;
+
+        PlayerData data = new PlayerData(gameManager.playerHealth.currentHealth, 
+        new float[] { position.x, position.y, position.z });
+        
         try
         {
-            string jsonData = JsonSerializer.Serialize(playerData); // For Newtonsoft.Json use JsonConvert.SerializeObject(data)
-            File.WriteAllText(path, jsonData);
+            formatter.Serialize(stream, data);
             Debug.Log("Player data saved successfully.");
         }
         catch (System.Exception e)
         {
             Debug.LogError("Failed to save player data: " + e.Message);
         }
+        finally
+        {
+            stream.Close();
+        }  
     }
 
     public static PlayerData LoadPlayer()
     {
         if (File.Exists(path))
         {
+            BinaryFormatter formatter = new BinaryFormatter(); 
             try
             {
-                string jsonData = File.ReadAllText(path);
-                PlayerData data = JsonSerializer.Deserialize<PlayerData>(jsonData); // For Newtonsoft.Json use JsonConvert.DeserializeObject<PlayerData>(jsonData)
-                Debug.Log("Player data loaded successfully.");
-                return data;
+                using (FileStream stream = new FileStream(path, FileMode.Open))
+                {
+                    PlayerData data = formatter.Deserialize(stream) as PlayerData;
+                    Debug.Log("Player data loaded successfully.");
+                    return data;
+                }
             }
             catch (IOException e)
             {
                 Debug.LogError("Failed to load player data: " + e.Message);
                 return null;
             }
-            catch (System.Exception e)
-            {
-                Debug.LogError("An error occurred: " + e.Message);
-                return null;
-            }
+
         }
         else
         {
-            Debug.LogError("Saved file not found in " + path);
-            return null;
+            Debug.LogError("Saved File not found in " + path); 
+            return null; 
         }
     }
 }
-
-*/ 
