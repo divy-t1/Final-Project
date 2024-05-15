@@ -32,7 +32,7 @@ public class movementScript : MonoBehaviour
         if (collision.gameObject.name == "Maze Walls") {
             charRB.velocity = UnityEngine.Vector3.back* 5; 
         }
-        Debug.Log("Collided with wall");  
+        //Debug.Log("Collided with wall");  
         
     }
 }

@@ -24,11 +24,6 @@ public class PlayerHealth : MonoBehaviour
     }
     
 
-    public void Heal(int amount){
-        currentHealth += amount; 
-        Debug.Log("Healing " + amount); 
-        healthBar.SetHealth(currentHealth); 
-    }
 
     public void SavePlayer() {
         SaveSystem.SavePlayer(this); 

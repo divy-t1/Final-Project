@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9164272709711667083}
   - component: {fileID: 6477381720984261523}
   - component: {fileID: 5047055338501486234}
-  - component: {fileID: -3292337903413678474}
+  - component: {fileID: 3189332324397954603}
   m_Layer: 0
   m_Name: Healh Power Up
   m_TagString: Power Up
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-3292337903413678474
+--- !u!114 &3189332324397954603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,3 +147,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   playerHealth: {fileID: 0}
   gameManager: {fileID: 0}
+  spawnableObject:
+    prefab: {fileID: 5972491603426006048}
+    initialPrefabCount: 2
+    currentPrefabCount: 1
