@@ -471,16 +471,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e694914f8fe8904188c6c2328c13858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5972491603426006048, guid: f42a7e295c3183f48ae3f485b2039ab4, type: 3}
   spawnPoints:
   - {fileID: 271101331}
   - {fileID: 1130535513}
   - {fileID: 1085837126}
   - {fileID: 29912172}
-  initialPrefabCount: 2
-  currentPrefabCount: 1
   playerHealth: {fileID: 1852609043}
   playerTransform: {fileID: 1852609038}
+  spawnableObjects:
+  - prefab: {fileID: 5972491603426006048, guid: f42a7e295c3183f48ae3f485b2039ab4, type: 3}
+    initialPrefabCount: 2
+    currentPrefabCount: 1
+    instances: []
 --- !u!1 &201005976
 GameObject:
   m_ObjectHideFlags: 0
