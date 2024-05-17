@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 1095499204784395536}
   - component: {fileID: 1690967398775155470}
   - component: {fileID: 9055645764307798122}
-  - component: {fileID: 3890563865526503570}
-  - component: {fileID: -8778219745494358926}
+  - component: {fileID: -3775918927339037314}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Trap
@@ -122,7 +121,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1}
   m_Direction: 0
---- !u!114 &3890563865526503570
+--- !u!114 &-3775918927339037314
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,24 +136,3 @@ MonoBehaviour:
   damage: 10
   healthBar: {fileID: 0}
   playerHealth: {fileID: 0}
-  trapPrefab: {fileID: 2569755062232165527}
-  spawningScript: {fileID: -8778219745494358926}
---- !u!114 &-8778219745494358926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2569755062232165527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa31300a00fa27544989826af15ef82d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetObject: {fileID: 2569755062232165527}
-  delay: 2
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}

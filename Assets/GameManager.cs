@@ -9,33 +9,26 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     
-    public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints  
     public PlayerHealth playerHealth;
     public Transform playerTransform;
-    public List<SpawnableObject> spawnableObjects; // List of spawnable objects
+    [SerializeField] private List<ObjectData> mazeObjects;
+    public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints 
 
+    //Define a simple class to hold the information needed for each type of object.
     [Serializable]
-    public class SpawnableObject
+    class ObjectData
     {
-        public GameObject prefab; // The prefab to spawn
-        public int initialPrefabCount; // The initial number of prefabs to spawn
-        public int currentPrefabCount; // The current number of prefabs in the scene
-        public List<GameObject> instances; // Track spawned instances
-
-        public void InitializeInstancesList()
-        {
-            instances = new List<GameObject>();
-        }
+        public GameObject prefab;
+        public int initialPrefabCount;
+        public int currentPrefabCount;
     }
 
     void Start() {
         // Initialize and spawn the initial prefabs for each spawnable object
-        foreach (SpawnableObject spawnableObject in spawnableObjects)
-        {
-            spawnableObject.InitializeInstancesList();
-            for (int i = 0; i < spawnableObject.initialPrefabCount; i++)
-            {
-                SpawnPrefab(spawnableObject);
+        for (int i = 0; i < mazeObjects.Count; i++) {
+
+            for (int j = 0; j < mazeObjects[i].initialPrefabCount; j++) {
+                SpawnPrefab(i);
             }
         }
 
@@ -68,11 +61,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SpawnPrefab(SpawnableObject spawnableObject)
+    void SpawnPrefab(int index)
     {
-        if (spawnableObject.currentPrefabCount >= spawnableObject.initialPrefabCount)
+        if (mazeObjects[index].currentPrefabCount >= mazeObjects[index].initialPrefabCount)
         {
-            Debug.Log("Limit reached for " + spawnableObject.prefab.name + ". No need to spawn more prefabs.");
+            Debug.Log("Limit reached for " + mazeObjects[index].prefab.name + ". No need to spawn more prefabs.");
             return; // Limit reached, no need to spawn any more prefabs
         }
 
@@ -80,35 +73,32 @@ public class GameManager : MonoBehaviour
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         // Instantiate the prefab at the spawn point
-        GameObject newPrefab = Instantiate(spawnableObject.prefab, spawnPoint.position, Quaternion.identity);
-        ISpawnable spawnableComponent = newPrefab.GetComponent<ISpawnable>(); // Use interface
+        GameObject newPrefab = Instantiate(mazeObjects[index].prefab, spawnPoint.position, Quaternion.identity);
 
-        if (spawnableComponent != null)
-        {
-            spawnableComponent.Initialize(this, spawnableObject); // Call method to initialize
-        }
-
-        // Add the new instance to the list and increment the count
-        spawnableObject.instances.Add(newPrefab);
-        spawnableObject.currentPrefabCount++; // Increase the count of the prefabs by one
-        Debug.Log("Spawned " + spawnableObject.prefab.name + ". Current count: " + spawnableObject.currentPrefabCount);
+        //increase the count of the prefabs by one 
+        mazeObjects[index].currentPrefabCount++; 
+        
+        //When a new object is created, GameManager needs to give the object a reference
+        //to this GameManager and tell the object which index of mazeObject is being
+        //used to track its type of object.
+        //This lets the spawned object properly call PrefabDestroyed later.
+        IMazeObject newMazeObject = newPrefab.GetComponent<IMazeObject>();
+        newMazeObject.gameManager = this;
+        newMazeObject.ObjectIndex = index;
+        Debug.Log("Spawned " + mazeObjects[index].prefab.name + ". Current count: " + mazeObjects[index].currentPrefabCount);
     }
 
-    public void PrefabDestroyed(SpawnableObject spawnableObject, GameObject prefabInstance)
+    public void PrefabDestroyed(int index)
     {
-        spawnableObject.currentPrefabCount--; // Decrease the current count by one
-        spawnableObject.instances.Remove(prefabInstance); // Remove the instance from the list
-        Debug.Log(spawnableObject.prefab.name + " destroyed. Current count: " + spawnableObject.currentPrefabCount);
-        SpawnPrefab(spawnableObject); // Spawn another prefab to maintain the count
+        mazeObjects[index].currentPrefabCount--; // Decrease the current count by one
+        Debug.Log(mazeObjects[index].prefab.name + " destroyed. Current count: " + mazeObjects[index].currentPrefabCount);
+        SpawnPrefab(index); // Spawn another prefab to maintain the count
     }
     
 
 } 
 
-public interface ISpawnable
-{
-    void Initialize(GameManager gameManager, GameManager.SpawnableObject spawnableObject);
-}
+
 
 
 

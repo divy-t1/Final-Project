@@ -3,31 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; 
 
-public class TrapTrigger : MonoBehaviour
+public class TrapTrigger : MonoBehaviour, IMazeObject
 {
     // Start is called before the first frame update
     public int damage;  
     public HealthBar healthBar; 
     public PlayerHealth playerHealth; 
-    public GameObject trapPrefab; 
-    //private bool isTriggered; 
-    public SpawningScript spawningScript; 
+    private GameManager m_GameManager;
+    // the variable that this class interacts with for the reference of game manager 
+    public GameManager gameManager { set => m_GameManager = value; }
+    // the variable for the interface reference through which other classes can interact with
+    private int m_ObjectIndex;
+    // the variable through which this class stores the index of the prefab, assinged by game manager
+    public int ObjectIndex { get => m_ObjectIndex; set => m_ObjectIndex = value; }
+    // the variable through which other classes can interact with our m_objectIndex
 
     //create the references for the game objects collider2d and spriterenderer 
-    new Collider2D collider2D; 
-    private SpriteRenderer spriteRenderer; 
+    
 
     void Start()
     {
+        if (playerHealth == null) {
+            playerHealth = FindObjectOfType<PlayerHealth>(); 
+        } if (healthBar == null) {
+            healthBar = FindObjectOfType<HealthBar>(); 
+        }
+
         if (playerHealth == null) {
             Debug.LogWarning("PlayerHealth reference is not assigned.");
         } if (healthBar == null) {
             Debug.LogWarning("HealthBar reference is not assigned.");
         }
-        
-        //connecting the collider and sprite renderer to the components of the game objects 
-        collider2D = GetComponent<Collider2D>(); 
-        spriteRenderer = GetComponent<SpriteRenderer>(); 
     }
 
 
@@ -43,21 +49,14 @@ public class TrapTrigger : MonoBehaviour
                 Debug.LogError("PlayerHealth or HealthBar reference is null.");
             }
 
-            //turning off the collider and sprite renderer to get the spawn to work 
-            collider2D.enabled = false; 
-            spriteRenderer.enabled = false; 
+            Destroy(gameObject); 
+            
 
             // Invoke the Spawn method after a delay
             //Debug.Log("Invoking Spawn method with a delay of " + spawningScript.delay);
-            Invoke("Spawn", spawningScript.delay);
+            m_GameManager.PrefabDestroyed(m_ObjectIndex);
         }
     }
 
-    private void Spawn()
-    {
-        Debug.Log("Invoking Spawn method with a delay of " + spawningScript.delay);
-        spawningScript.Spawn(); 
 
-        Destroy(gameObject); //destroys the game object after
-    }
 }
