@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public Transform playerTransform;
     [SerializeField] private List<ObjectData> mazeObjects;
     public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints 
+    private List<Vector3> availableSpawnPoints = new List<Vector3>();
+
 
     //Define a simple class to hold the information needed for each type of object.
     [Serializable]
@@ -24,6 +26,9 @@ public class GameManager : MonoBehaviour
     }
 
     void Start() {
+        for (int i = 0; i<spawnPoints.Length; i++) {
+            availableSpawnPoints.Add(spawnPoints[i].position); 
+        }
         // Initialize and spawn the initial prefabs for each spawnable object
         for (int i = 0; i < mazeObjects.Count; i++) {
 
@@ -70,10 +75,12 @@ public class GameManager : MonoBehaviour
         }
 
         // Randomly select a spawn point from the array
-        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+        int randomIndex = UnityEngine.Random.Range(0, availableSpawnPoints.Count);
+        Vector3 spawnPoint = availableSpawnPoints[randomIndex]; 
+        availableSpawnPoints.RemoveAt(randomIndex);
 
         // Instantiate the prefab at the spawn point
-        GameObject newPrefab = Instantiate(mazeObjects[index].prefab, spawnPoint.position, Quaternion.identity);
+        GameObject newPrefab = Instantiate(mazeObjects[index].prefab, spawnPoint, Quaternion.identity);
 
         //increase the count of the prefabs by one 
         mazeObjects[index].currentPrefabCount++; 
@@ -88,11 +95,16 @@ public class GameManager : MonoBehaviour
         Debug.Log("Spawned " + mazeObjects[index].prefab.name + ". Current count: " + mazeObjects[index].currentPrefabCount);
     }
 
-    public void PrefabDestroyed(int index)
+    public void PrefabDestroyed(int index, Vector3 position)
     {
         mazeObjects[index].currentPrefabCount--; // Decrease the current count by one
         Debug.Log(mazeObjects[index].prefab.name + " destroyed. Current count: " + mazeObjects[index].currentPrefabCount);
         SpawnPrefab(index); // Spawn another prefab to maintain the count
+
+        //Don't add the previous position to the available list until after spawning
+        //the new object. Otherwise there is a change you will spawn in exactly the same
+        //place and the player will immediately collect it.
+        availableSpawnPoints.Add(position);
     }
     
 

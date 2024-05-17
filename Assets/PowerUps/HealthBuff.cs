@@ -71,7 +71,7 @@ public class HealthBuff : MonoBehaviour, IMazeObject
             // tells the game manager that a prefab has been destroyed and to spawn another  
             // We must pass the object index back to the GameManager so that it knows what
             // type of object was destroyed.
-            m_GameManager.PrefabDestroyed(m_ObjectIndex);
+            m_GameManager.PrefabDestroyed(m_ObjectIndex, transform.position);
            
         }  
     }

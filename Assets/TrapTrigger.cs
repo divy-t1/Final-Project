@@ -54,7 +54,7 @@ public class TrapTrigger : MonoBehaviour, IMazeObject
 
             // Invoke the Spawn method after a delay
             //Debug.Log("Invoking Spawn method with a delay of " + spawningScript.delay);
-            m_GameManager.PrefabDestroyed(m_ObjectIndex);
+            m_GameManager.PrefabDestroyed(m_ObjectIndex, transform.position);
         }
     }
 
