@@ -5,10 +5,19 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//Define a simple class to hold the information needed for each type of object.
+[Serializable]
+class ObjectData {
+    public GameObject prefab;
+    public int initialPrefabCount;
+    public int currentPrefabCount;
+}
+
 [Serializable]
 public class GameManager : MonoBehaviour
 {
-    
+
+
     public PlayerHealth playerHealth;
     public Transform playerTransform;
     [SerializeField] private List<ObjectData> mazeObjects;
@@ -16,29 +25,32 @@ public class GameManager : MonoBehaviour
     private List<Vector3> availableSpawnPoints = new List<Vector3>();
 
 
-    //Define a simple class to hold the information needed for each type of object.
-    [Serializable]
-    class ObjectData
-    {
-        public GameObject prefab;
-        public int initialPrefabCount;
-        public int currentPrefabCount;
-    }
-
     void Start() {
-        for (int i = 0; i<spawnPoints.Length; i++) {
-            availableSpawnPoints.Add(spawnPoints[i].position); 
-        }
-        // Initialize and spawn the initial prefabs for each spawnable object
-        for (int i = 0; i < mazeObjects.Count; i++) {
-
-            for (int j = 0; j < mazeObjects[i].initialPrefabCount; j++) {
-                SpawnPrefab(i);
-            }
-        }
-
+        InitializeSpawnPoints(); 
+        InitializeMazeObjects(); 
         LoadPlayerData(); 
     } 
+
+    // Method to initialze the list of available spawn points 
+    private void InitializeSpawnPoints() {
+        // Loop through each spawn point in the array of transform components 
+        foreach (var spawnPoint in spawnPoints) {
+            // Add the position of each spawn point to the list of the available spawn points
+            availableSpawnPoints.Add(spawnPoint.position); 
+        }
+        Debug.Log("Initialized " + availableSpawnPoints.Count + " spawn points.");
+    }
+
+    // Initialize and spawn the initial prefabs for each spawnable object
+    private void InitializeMazeObjects() {
+        // Loop through each objectdata in the maze object list 
+        for (int i = 0; i < mazeObjects.Count; i++) {
+            // Reset currentPrefabCount to ensure correct initialization
+            mazeObjects[i].currentPrefabCount = 0;
+            // Spawn the initial number of prefabs specified for each object type 
+            SpawnPrefabRecursive(i);
+        }
+    }
 
     // Method to save player data
     public void SavePlayerData()
@@ -66,12 +78,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SpawnPrefab(int index)
+    void SpawnPrefabRecursive(int index)
     {
+        // Base Case 1: check to see if the current number of prefab has reached the initial count
         if (mazeObjects[index].currentPrefabCount >= mazeObjects[index].initialPrefabCount)
         {
             Debug.Log("Limit reached for " + mazeObjects[index].prefab.name + ". No need to spawn more prefabs.");
             return; // Limit reached, no need to spawn any more prefabs
+        }
+
+        // Base Case 2: if there are no spawn points left 
+        if (availableSpawnPoints.Count == 0) {
+            Debug.Log("No available spawn points left"); 
+            return; // no need to spawn anything 
         }
 
         // Randomly select a spawn point from the array
@@ -93,18 +112,25 @@ public class GameManager : MonoBehaviour
         newMazeObject.gameManager = this;
         newMazeObject.ObjectIndex = index;
         Debug.Log("Spawned " + mazeObjects[index].prefab.name + ". Current count: " + mazeObjects[index].currentPrefabCount);
+
+        // Recursive call to continue spawning 
+        SpawnPrefabRecursive(index); 
     }
 
     public void PrefabDestroyed(int index, Vector3 position)
     {
         mazeObjects[index].currentPrefabCount--; // Decrease the current count by one
         Debug.Log(mazeObjects[index].prefab.name + " destroyed. Current count: " + mazeObjects[index].currentPrefabCount);
-        SpawnPrefab(index); // Spawn another prefab to maintain the count
+
+        // Spawn another prefab to maintain the count 
+        SpawnPrefabRecursive(index); 
 
         //Don't add the previous position to the available list until after spawning
         //the new object. Otherwise there is a change you will spawn in exactly the same
         //place and the player will immediately collect it.
         availableSpawnPoints.Add(position);
+
+
     }
     
 
