@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,22 +14,48 @@ class ObjectData {
     public int currentPrefabCount;
 }
 
+//These classes will hold the data for each item and treasure point 
+[Serializable]
+public class Item {
+    public string name;
+    public int value;
+
+    public Item(string name, int value) {
+        this.name = name;
+        this.value = value;
+    }
+}
+
+[Serializable]
+public class TreasurePoint {
+    public Vector3 position;
+    public List<Item> items;
+
+    public TreasurePoint(Vector3 position, List<Item> items) {
+        this.position = position;
+        this.items = items;
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 [Serializable]
 public class GameManager : MonoBehaviour
 {
-
-
     public PlayerHealth playerHealth;
     public Transform playerTransform;
     [SerializeField] private List<ObjectData> mazeObjects;
     public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints 
     private List<Vector3> availableSpawnPoints = new List<Vector3>();
+    public TextMeshProUGUI scoreboardText; // UI Text component to display the score
+    private List<TreasurePoint> treasurePoints = new List<TreasurePoint>();
+    private int playerScore = 0;
 
 
     void Start() {
         InitializeSpawnPoints(); 
         InitializeMazeObjects(); 
         LoadPlayerData(); 
+        InitializeTreasurePoints(); // Initialize treasure points
+        UpdateScoreboard(); // Initialize scoreboard
     } 
 
     // Method to initialze the list of available spawn points 
@@ -52,6 +79,79 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Method to initialize treasure points with items
+    private void InitializeTreasurePoints() {
+        // Iterate through each available spawn point position
+        foreach (var position in availableSpawnPoints) {
+            // Create a list of items for each treasure point
+            List<Item> items = new List<Item> {
+                new Item("Gold Coin", 10),  // Gold Coin worth 10 points
+                new Item("Diamond", 100),   // Diamond worth 100 points
+                new Item("Silver Coin", 5), // Silver Coin worth 5 points
+                new Item("Trap", -20)       // Trap that reduces score by 20 points
+            };
+            // Sort the items list by their value using Selection Sort
+            SelectionSortItems(items);
+            // Create a new TreasurePoint with the current position and the sorted items list
+            TreasurePoint treasurePoint = new TreasurePoint(position, items);
+            // Add the created TreasurePoint to the list of treasure points
+            treasurePoints.Add(treasurePoint);
+        }
+    }
+
+    // Selection Sort algorithm to sort items by their value
+    private void SelectionSortItems(List<Item> items) {
+        // Iterate through the list of items (except the last item)
+        for (int i = 0; i < items.Count - 1; i++) {
+            int minIndex = i; // Assume the current item is the minimum
+            // Iterate through the unsorted portion of the list
+            for (int j = i + 1; j < items.Count; j++) {
+                // Update minIndex if a smaller item is found
+                if (items[j].value < items[minIndex].value) {
+                    minIndex = j;
+                }
+            }
+            // Swap the minimum item found with the current item
+            Item temp = items[minIndex];
+            items[minIndex] = items[i];
+            items[i] = temp;
+        }
+    }
+
+    // Linear search algorithm to find an item by name
+    private Item FindItemByName(string name, List<Item> items) {
+        // Iterate through the list of items
+        foreach (var item in items) {
+            // Compare each item's name with the provided name (case-insensitive)
+            if (item.name.Equals(name, StringComparison.OrdinalIgnoreCase)) {
+                return item; // Return the item if a match is found
+            }
+        }
+        return null; // Return null if no match is found
+    }
+
+    // Method to update the scoreboard UI text with the current score
+    private void UpdateScoreboard() {
+        scoreboardText.text = "Score: " + playerScore;
+    }
+
+    // Method to handle the collection of an item by the player
+    public void CollectItem(string itemName, Vector3 position) {
+        // Find the treasure point at the specified position
+        TreasurePoint treasurePoint = treasurePoints.Find(tp => tp.position == position);
+        if (treasurePoint != null) {
+            // Find the item within the treasure point's items list by name
+            Item item = FindItemByName(itemName, treasurePoint.items);
+            if (item != null) {
+                playerScore += item.value; // Update the player's score with the item's value
+                treasurePoint.items.Remove(item); // Remove the collected item from the list
+                UpdateScoreboard(); // Update the scoreboard to reflect the new score
+                Debug.Log("Collected: " + item.name + " | New Score: " + playerScore);
+            }
+        }
+    }
+
+
     // Method to save player data
     public void SavePlayerData()
     {
@@ -69,6 +169,7 @@ public class GameManager : MonoBehaviour
             // Set player position from loaded data
             Vector3 position = new Vector3(loadedData.position[0], loadedData.position[1], loadedData.position[2]);
             playerTransform.position = position;
+            UpdateScoreboard();
 
             // Other data loading operations...
         }
