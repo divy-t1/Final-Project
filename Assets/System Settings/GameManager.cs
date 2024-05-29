@@ -14,6 +14,7 @@ class ObjectData {
     public int currentPrefabCount;
 }
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 [Serializable]
 public class GameManager : MonoBehaviour
@@ -143,12 +144,12 @@ public class GameManager : MonoBehaviour
         availableSpawnPoints.Add(position);
 
     }
-    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void InitializeItems() {
         // Add item information to the list
         items.Add(new Item("Gold Coin", 10, itemSprites[0]));
         items.Add(new Item("Silver Coin", 5, itemSprites[1]));
-        items.Add(new Item("Bronze Coin", 1, itemSprites[2]));
+        items.Add(new Item("Empty Chest", 0, itemSprites[2]));
         items.Add(new Item("Diamond", 100, itemSprites[3]));
 
         SelectionSortItems(items);  // Sort items based on their values
