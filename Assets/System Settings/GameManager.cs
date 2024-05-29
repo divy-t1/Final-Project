@@ -14,29 +14,6 @@ class ObjectData {
     public int currentPrefabCount;
 }
 
-/*These classes will hold the data for each item and treasure point 
-[Serializable]
-public class Item {
-    public string name;
-    public int value;
-
-    public Item(string name, int value) {
-        this.name = name;
-        this.value = value;
-    }
-}
-
-[Serializable]
-public class TreasurePoint {
-    public Vector3 position;
-    public List<Item> items;
-
-    public TreasurePoint(Vector3 position, List<Item> items) {
-        this.position = position;
-        this.items = items;
-    }
-}
-*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 [Serializable]
 public class GameManager : MonoBehaviour
@@ -49,13 +26,19 @@ public class GameManager : MonoBehaviour
     //public TextMeshProUGUI scoreboardText; // UI Text component to display the score
     //private List<TreasurePoint> treasurePoints = new List<TreasurePoint>();
     private int playerScore = 0;
+    public List<Sprite> itemSprites;     // List of sprites for different items
+    public TextMeshProUGUI itemValueText;  // Text UI component to display item value
+    private List<Item> items = new List<Item>();   // List to store item information
+    public GameObject treasureChestPrefab; // Reference to the prefab of the treasure chest
+    private List<TreasureChest> treasureChests = new List<TreasureChest>();  // List to store spawned treasure chests
+
 
 
     void Start() {
         InitializeSpawnPoints(); 
         InitializeMazeObjects(); 
         LoadPlayerData(); 
-        //InitializeTreasurePoints(); // Initialize treasure points
+        InitializeTreasureChests();// Initialize treasure chests
         //UpdateScoreboard(); // Initialize scoreboard
     } 
 
@@ -159,9 +142,56 @@ public class GameManager : MonoBehaviour
         //place and the player will immediately collect it.
         availableSpawnPoints.Add(position);
 
-
     }
     
+    private void InitializeItems() {
+        // Add item information to the list
+        items.Add(new Item("Gold Coin", 10, itemSprites[0]));
+        items.Add(new Item("Silver Coin", 5, itemSprites[1]));
+        items.Add(new Item("Bronze Coin", 1, itemSprites[2]));
+        items.Add(new Item("Diamond", 100, itemSprites[3]));
+
+        SelectionSortItems(items);  // Sort items based on their values
+    }
+
+    // Method to sort items based on their values using selection sort algorithm
+    private void SelectionSortItems(List<Item> items) {
+        for (int i = 0; i < items.Count - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < items.Count; j++) {
+                if (items[j].value < items[minIndex].value) {
+                    minIndex = j;
+                }
+            }
+            Item temp = items[minIndex];
+            items[minIndex] = items[i];
+            items[i] = temp;
+        }
+    }
+
+    // Method to initialize treasure chests at spawn points
+    private void InitializeTreasureChests() {
+        foreach (var position in availableSpawnPoints) {
+            SpawnTreasureChest(position);  // Spawn a treasure chest at each spawn point
+        }
+    }
+
+    // Method to spawn a treasure chest at a given position
+    private void SpawnTreasureChest(Vector3 position) {
+        // Instantiate the treasure chest prefab
+        GameObject chestObject = Instantiate(treasureChestPrefab, position, Quaternion.identity);
+        TreasureChest treasureChest = chestObject.GetComponent<TreasureChest>();
+
+        // Select a random item for the chest
+        Item randomItem = items[UnityEngine.Random.Range(0, items.Count)];
+        treasureChest.Initialize(randomItem, this);  // Initialize the chest with the selected item and reference to GameManager
+        treasureChests.Add(treasureChest);  // Add the chest to the list of spawned chests
+    }
+
+    // Method to display the value of the collected item
+    public void DisplayItemValue(int value) {
+        itemValueText.text = "Item Value: " + value;
+    }
 
 } 
 
