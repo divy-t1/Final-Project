@@ -9,30 +9,44 @@ public class movementScript : MonoBehaviour
     // Start is called before the first frame update
 
 
-    float speed = 5.0F;  
-    public Rigidbody2D charRB; 
-    
+    public float speed = 5.0F;
+    public float originalSpeed; 
 
-    void Start()
-    {
-        
+    void Start() {
+        originalSpeed = speed; 
     }
-
+    
     // Update is called once per frame
     void Update()
     {
 
-        var move = new UnityEngine.Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0F); 
-        //charRB.MovePosition(move * speed * Time.deltaTime);
-        transform.position += move * speed * Time.deltaTime;
+        float moveX = 0f; 
+        float moveY = 0f; 
 
-    }
-
-    private void OnCollisionEnter2D (Collision2D collision) {
-        if (collision.gameObject.name == "Maze Walls") {
-            charRB.velocity = UnityEngine.Vector3.back* 5; 
+        // Check for arrow inputs of arrow keys 
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            moveY = 1f; 
+        } else if (Input.GetKey(KeyCode.DownArrow)) {
+            moveY = -1f; 
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
+            moveX = 1f; 
+        } else if (Input.GetKey(KeyCode.LeftArrow)) {
+            moveX = -1f; 
         }
-        //Debug.Log("Collided with wall");  
-        
+
+        // Apply the movements 
+        UnityEngine.Vector3 move = new UnityEngine.Vector3(moveX, moveY, 0f).normalized * speed * Time.deltaTime; 
+        transform.position += move; 
+
     }
+
+    public IEnumerator ApplySpeedBuff(float speedIncrease, float duration)
+    {
+        speed += speedIncrease;
+
+        yield return new WaitForSeconds(duration);
+
+        speed = originalSpeed;
+    }
+
 }
