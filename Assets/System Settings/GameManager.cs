@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,15 +33,19 @@ public class GameManager : MonoBehaviour
     private List<Item> items = new List<Item>();   // List to store item information
     public GameObject treasureChestPrefab; // Reference to the prefab of the treasure chest
     private List<TreasureChest> treasureChests = new List<TreasureChest>();  // List to store spawned treasure chests
-
+    private List<Vector3> availableChestSpawnPoints = new List<Vector3>();
+    public Transform[] chestSpawnPoints; // Array of the transform portion of the chest spawn points
+    public TextMeshProUGUI scoreText; // UI Text component to display the score
+    public TextMeshProUGUI tempValueText; // UI Text component to display temporary value
 
 
     void Start() {
         InitializeSpawnPoints(); 
         InitializeMazeObjects(); 
         LoadPlayerData(); 
+        InitializeItems(); 
+        InitializeChestSpawnPoints();
         InitializeTreasureChests();// Initialize treasure chests
-        //UpdateScoreboard(); // Initialize scoreboard
     } 
 
     // Method to initialze the list of available spawn points 
@@ -56,10 +61,11 @@ public class GameManager : MonoBehaviour
     // Initialize and spawn the initial prefabs for each spawnable object
     private void InitializeMazeObjects() {
         // Loop through each objectdata in the maze object list 
+        foreach (var mazeObject in mazeObjects) {
+            mazeObject.currentPrefabCount = 0;  // Reset currentPrefabCount here
+        }
+
         for (int i = 0; i < mazeObjects.Count; i++) {
-            // Reset currentPrefabCount to ensure correct initialization
-            mazeObjects[i].currentPrefabCount = 0;
-            // Spawn the initial number of prefabs specified for each object type 
             SpawnPrefabRecursive(i);
         }
     }
@@ -126,8 +132,10 @@ public class GameManager : MonoBehaviour
         newMazeObject.ObjectIndex = index;
         Debug.Log("Spawned " + mazeObjects[index].prefab.name + ". Current count: " + mazeObjects[index].currentPrefabCount);
 
-        // Recursive call to continue spawning 
-        SpawnPrefabRecursive(index); 
+            // Check if we still need more instances
+        if (mazeObjects[index].currentPrefabCount < mazeObjects[index].maintainPrefabCount) {
+            SpawnPrefabRecursive(index); // Recursive call to continue spawning
+        }
     }
 
     public void PrefabDestroyed(int index, Vector3 position)
@@ -155,6 +163,13 @@ public class GameManager : MonoBehaviour
         SelectionSortItems(items);  // Sort items based on their values
     }
 
+    private void InitializeChestSpawnPoints() {
+        foreach (var spawnPoint in chestSpawnPoints) {
+            availableChestSpawnPoints.Add(spawnPoint.position); 
+        }
+        Debug.Log("Initialized " + availableChestSpawnPoints.Count + " chest spawn points.");
+    }
+
     // Method to sort items based on their values using selection sort algorithm
     private void SelectionSortItems(List<Item> items) {
         for (int i = 0; i < items.Count - 1; i++) {
@@ -170,26 +185,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Method to initialize treasure chests at spawn points
     private void InitializeTreasureChests() {
-        foreach (var position in availableSpawnPoints) {
-            SpawnTreasureChest(position);  // Spawn a treasure chest at each spawn point
+        foreach (var position in availableChestSpawnPoints) {
+            SpawnTreasureChest(position);  
         }
     }
 
-    // Method to spawn a treasure chest at a given position
     private void SpawnTreasureChest(Vector3 position) {
-        // Instantiate the treasure chest prefab
         GameObject chestObject = Instantiate(treasureChestPrefab, position, Quaternion.identity);
         TreasureChest treasureChest = chestObject.GetComponent<TreasureChest>();
 
-        // Select a random item for the chest
         Item randomItem = items[UnityEngine.Random.Range(0, items.Count)];
-        treasureChest.Initialize(randomItem, this);  // Initialize the chest with the selected item and reference to GameManager
-        treasureChests.Add(treasureChest);  // Add the chest to the list of spawned chests
+        treasureChest.Initialize(randomItem, this);  
+        treasureChests.Add(treasureChest);
     }
 
-    // Method to display the value of the collected item
     public void DisplayItemValue(int value) {
         itemValueText.text = "Item Value: " + value;
     }
@@ -197,6 +207,73 @@ public class GameManager : MonoBehaviour
 } 
 
 
+/*
+private void SpawnTreasureChests(Vector3[] positions, int goldCount, int silverCount, int emptyCount, int diamondCount) {
+    // Create a list to store the items for spawning
+    List<Item> itemsToSpawn = new List<Item>();
 
+    // Add specified number of gold chests
+    for (int i = 0; i < goldCount; i++) {
+        itemsToSpawn.Add(new Item("Gold Coin", 10, itemSprites[0]));
+    }
+
+    // Add specified number of silver chests
+    for (int i = 0; i < silverCount; i++) {
+        itemsToSpawn.Add(new Item("Silver Coin", 5, itemSprites[1]));
+    }
+
+    // Add specified number of empty chests
+    for (int i = 0; i < emptyCount; i++) {
+        itemsToSpawn.Add(new Item("Empty Chest", 0, itemSprites[2]));
+    }
+
+    // Add specified number of diamond chests
+    for (int i = 0; i < diamondCount; i++) {
+        itemsToSpawn.Add(new Item("Diamond", 100, itemSprites[3]));
+    }
+
+    // Shuffle the list to ensure randomness
+    ShuffleItems(itemsToSpawn);
+
+    // Spawn treasure chests with the shuffled items
+    for (int i = 0; i < positions.Length; i++) {
+        GameObject chestObject = Instantiate(treasureChestPrefab, positions[i], Quaternion.identity);
+        TreasureChest treasureChest = chestObject.GetComponent<TreasureChest>();
+        treasureChest.Initialize(itemsToSpawn[i], this);
+        treasureChests.Add(treasureChest);
+    }
+}
+
+private void ShuffleItems(List<Item> items) {
+        for (int i = items.Count - 1; i > 0; i--) {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            Item temp = items[i];
+            items[i] = items[randomIndex];
+            items[randomIndex] = temp;
+        }
+    }
+
+    public void AddToScore(int value) {
+        totalScore += value;
+        scoreText.text = "Score: " + totalScore;
+    }
+
+    public void DisplayTempValue(int value) {
+        StartCoroutine(DisplayTempValueCoroutine(value));
+    }
+
+    private IEnumerator DisplayTempValueCoroutine(int value) {
+        tempValueText.text = "+" + value;
+        tempValueText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        tempValueText.gameObject.SetActive(false);
+    }
+
+    We've added a method InitializeTreasureChests to specify the counts for each type of chest (goldCount, silverCount, emptyCount, and diamondCount) and spawn chests accordingly.
+The SpawnTreasureChests method now takes additional parameters for the counts of each type of chest.
+We've added methods AddToScore to update the total score and DisplayTempValue to display the temporary value when a chest is opened.
+The DisplayTempValueCoroutine method uses a coroutine to display the temporary value for 2 seconds before hiding it.
+
+*/
 
 

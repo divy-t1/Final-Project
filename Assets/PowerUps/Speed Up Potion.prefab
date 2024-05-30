@@ -120,5 +120,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedIncrease: 5
-  time: 5
-  movementScript: {fileID: 0}
+  duration: 5
