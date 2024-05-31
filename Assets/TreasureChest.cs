@@ -40,7 +40,8 @@ public class TreasureChest : MonoBehaviour
         isOpened = true;  // Set the chest as opened
         spriteRenderer.sprite = item.sprite;  // Change the sprite to display the item
         if (gameManager != null) {
-            gameManager.DisplayItemValue(item.value);  // Display the item's value
+            gameManager.AddToScore(item.value);  // Add the item's value to the score
+            gameManager.DisplayTempValue(item.value);  // Display the item's value temporarily
         } else {
             Debug.LogWarning("GameManager reference is missing in TreasureChest");
         }

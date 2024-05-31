@@ -23,21 +23,18 @@ public class GameManager : MonoBehaviour
     public PlayerHealth playerHealth;
     public Transform playerTransform;
     [SerializeField] private List<ObjectData> mazeObjects;
-    public Transform[] spawnPoints; // an array of the transform portion of the spawnpoints 
+    public Transform[] spawnPoints;
     private List<Vector3> availableSpawnPoints = new List<Vector3>();
-    //public TextMeshProUGUI scoreboardText; // UI Text component to display the score
-    //private List<TreasurePoint> treasurePoints = new List<TreasurePoint>();
     private int playerScore = 0;
-    public List<Sprite> itemSprites;     // List of sprites for different items
-    public TextMeshProUGUI itemValueText;  // Text UI component to display item value
-    private List<Item> items = new List<Item>();   // List to store item information
-    public GameObject treasureChestPrefab; // Reference to the prefab of the treasure chest
-    private List<TreasureChest> treasureChests = new List<TreasureChest>();  // List to store spawned treasure chests
+    public List<Sprite> itemSprites;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI tempValueText;
+    private List<Item> items = new List<Item>();
+    public GameObject treasureChestPrefab;
+    private List<TreasureChest> treasureChests = new List<TreasureChest>();
     private List<Vector3> availableChestSpawnPoints = new List<Vector3>();
-    public Transform[] chestSpawnPoints; // Array of the transform portion of the chest spawn points
-    public TextMeshProUGUI scoreText; // UI Text component to display the score
-    public TextMeshProUGUI tempValueText; // UI Text component to display temporary value
-
+    public Transform[] chestSpawnPoints;
+    private int totalScore = 0;
 
     void Start() {
         InitializeSpawnPoints(); 
@@ -185,9 +182,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void ShuffleItems(List<Item> items) {
+        for (int i = items.Count - 1; i > 0; i--) {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            Item temp = items[i];
+            items[i] = items[randomIndex];
+            items[randomIndex] = temp;
+        }
+    }
+
     private void InitializeTreasureChests() {
         foreach (var position in availableChestSpawnPoints) {
-            SpawnTreasureChest(position);  
+            SpawnTreasureChest(position);
         }
     }
 
@@ -196,12 +202,24 @@ public class GameManager : MonoBehaviour
         TreasureChest treasureChest = chestObject.GetComponent<TreasureChest>();
 
         Item randomItem = items[UnityEngine.Random.Range(0, items.Count)];
-        treasureChest.Initialize(randomItem, this);  
+        treasureChest.Initialize(randomItem, this);
         treasureChests.Add(treasureChest);
     }
 
-    public void DisplayItemValue(int value) {
-        itemValueText.text = "Item Value: " + value;
+    public void AddToScore(int value) {
+        totalScore += value;
+        scoreText.text = "Score: " + totalScore;
+    }
+
+    public void DisplayTempValue(int value) {
+        StartCoroutine(DisplayTempValueCoroutine(value));
+    }
+
+    private IEnumerator DisplayTempValueCoroutine(int value) {
+        tempValueText.text = "+" + value;
+        tempValueText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        tempValueText.gameObject.SetActive(false);
     }
 
 } 
