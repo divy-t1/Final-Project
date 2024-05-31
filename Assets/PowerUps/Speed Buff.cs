@@ -11,10 +11,13 @@ public class SpeedBuff : MonoBehaviour, IMazeObject
     public GameManager gameManager { set => m_GameManager = value; }
     private int m_ObjectIndex;  // Index to identify the type of this object
     public int ObjectIndex { get => m_ObjectIndex; set => m_ObjectIndex = value; }
+    public PlayerMovement playerMovement; 
 
     void Start()
     {
-        // Optionally, add any initialization code here
+        if (playerMovement == null) {
+            playerMovement = FindObjectOfType<PlayerMovement>(); 
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,18 +29,19 @@ public class SpeedBuff : MonoBehaviour, IMazeObject
             Debug.Log("Player collided with speed buff.");
 
             // Get the MovementScript component from the player
-            MovementScript movementScript = collision.gameObject.GetComponent<MovementScript>();
+            //MovementScript movementScript = collision.gameObject.GetComponent<MovementScript>();
 
             // Apply the speed buff if the MovementScript component is found
-            if (movementScript != null)
+            if (playerMovement != null)
             {
                 Debug.Log("Applying speed buff: " + speedIncrease + " for " + duration + " seconds.");
-                movementScript.StartSpeedBuff(speedIncrease, duration);
+                playerMovement.StartSpeedBuff(speedIncrease, duration);
             }
             else
             {
                 Debug.LogError("MovementScript component is not found.");
             }
+            //lkl
 
             Destroy(gameObject);  // Destroy the speed buff
 
@@ -51,3 +55,5 @@ public class SpeedBuff : MonoBehaviour, IMazeObject
     }
     
 }
+
+

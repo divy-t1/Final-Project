@@ -3376,7 +3376,6 @@ GameObject:
   - component: {fileID: 1852609037}
   - component: {fileID: 1852609039}
   - component: {fileID: 1852609041}
-  - component: {fileID: 1852609036}
   - component: {fileID: 1852609043}
   m_Layer: 0
   m_Name: Player
@@ -3385,19 +3384,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1852609036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852609035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634d35154ca4b1343a06bae8ced9a29d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
 --- !u!212 &1852609037
 SpriteRenderer:
   m_ObjectHideFlags: 0

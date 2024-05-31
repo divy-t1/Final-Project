@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class MovementScript : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5f;  // Movement speed of the player
     private Rigidbody2D rb2D;  // Reference to the player's Rigidbody2D component
@@ -48,6 +46,4 @@ public class MovementScript : MonoBehaviour
         speed = originalSpeed;  // Reset the move speed to the original value
         Debug.Log("Speed reset to original value: " + speed);
     }
-
-   
 }
