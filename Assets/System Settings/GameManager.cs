@@ -6,6 +6,7 @@ using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI; 
 
 //Define a simple class to hold the information needed for each type of object.
 [Serializable]
@@ -25,16 +26,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<ObjectData> mazeObjects;
     public Transform[] spawnPoints;
     private List<Vector3> availableSpawnPoints = new List<Vector3>();
-    private int playerScore = 0;
+
     public List<Sprite> itemSprites;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI tempValueText;
     private List<Item> items = new List<Item>();
     public GameObject treasureChestPrefab;
     private List<TreasureChest> treasureChests = new List<TreasureChest>();
     private List<Vector3> availableChestSpawnPoints = new List<Vector3>();
     public Transform[] chestSpawnPoints;
+
     private int totalScore = 0;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI tempValueText;
+    public int TotalScore => totalScore;  // Expose totalScore for saving
 
     void Start() {
         InitializeSpawnPoints(); 
@@ -43,6 +46,35 @@ public class GameManager : MonoBehaviour
         InitializeItems(); 
         InitializeChestSpawnPoints();
         InitializeTreasureChests();// Initialize treasure chests
+        UpdateScoreUI(); 
+    }
+
+    // Method to save player data
+    public void SavePlayerData()
+    {
+        SaveSystem.SavePlayer(this);
+    }
+    
+
+    public void LoadPlayerData()
+    {
+        PlayerData loadedData = SaveSystem.LoadPlayer();
+        if (loadedData != null)
+        {
+            playerHealth.SetHealth(loadedData.health);
+
+            // Set player position from loaded data
+            Vector3 position = new Vector3(loadedData.position[0], loadedData.position[1], loadedData.position[2]);
+            playerTransform.position = position;
+            
+            // Set the total score from loaded data
+            totalScore = loadedData.score;
+            UpdateScoreUI();
+        }
+        else
+        {
+            Debug.LogError("Failed to load player data.");
+        }
     } 
 
     // Method to initialze the list of available spawn points 
@@ -64,33 +96,6 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < mazeObjects.Count; i++) {
             SpawnPrefabRecursive(i);
-        }
-    }
-
-    // Method to save player data
-    public void SavePlayerData()
-    {
-        SaveSystem.SavePlayer(this);
-    }
-    
-
-    public void LoadPlayerData()
-    {
-        PlayerData loadedData = SaveSystem.LoadPlayer();
-        if (loadedData != null)
-        {
-            playerHealth.SetHealth(loadedData.health);
-
-            // Set player position from loaded data
-            Vector3 position = new Vector3(loadedData.position[0], loadedData.position[1], loadedData.position[2]);
-            playerTransform.position = position;
-            //UpdateScoreboard();
-
-            // Other data loading operations...
-        }
-        else
-        {
-            Debug.LogError("Failed to load player data.");
         }
     }
 
@@ -205,9 +210,15 @@ public class GameManager : MonoBehaviour
         treasureChest.Initialize(randomItem, this);
         treasureChests.Add(treasureChest);
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////////
     public void AddToScore(int value) {
         totalScore += value;
+        scoreText.text = "Score: " + totalScore;
+    }
+
+    // Method to update the score UI
+    private void UpdateScoreUI()
+    {
         scoreText.text = "Score: " + totalScore;
     }
 

@@ -18,7 +18,7 @@ public static class SaveSystem
         Vector3 position = gameManager.playerTransform.position;
 
         PlayerData data = new PlayerData(gameManager.playerHealth.currentHealth, 
-        new float[] { position.x, position.y, position.z });
+        new float[] { position.x, position.y, position.z }, gameManager.TotalScore);
         
         try
         {

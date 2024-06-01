@@ -43,10 +43,16 @@ public class SpeedBuff : MonoBehaviour, IMazeObject
             }
             //lkl
 
+            // Destroy the speed buff and notify the GameManager
             Destroy(gameObject);  // Destroy the speed buff
-
-            // Notify the GameManager that a prefab has been destroyed and to spawn another
-            m_GameManager.PrefabDestroyed(m_ObjectIndex, transform.position);
+            Debug.Log("Speed buff destroyed.");
+            if (m_GameManager != null) {
+                Debug.Log("Notifying GameManager about destroyed prefab.");
+                m_GameManager.PrefabDestroyed(m_ObjectIndex, transform.position);
+                Debug.Log("GameManager notified.");
+            } else {
+                Debug.LogError("GameManager reference is missing.");
+            }
         }
         else
         {

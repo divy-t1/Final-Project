@@ -6,11 +6,13 @@ public class PlayerData
 {
     public int health;
     public float[] position;
+    public int score; 
 
-    public PlayerData(int health, float[] position)
+    public PlayerData(int health, float[] position, int score)
     {
         this.health = health;
         this.position = position;
+        this.score = score; 
     }
 }
 

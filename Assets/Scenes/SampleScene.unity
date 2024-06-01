@@ -611,7 +611,7 @@ MonoBehaviour:
   - prefab: {fileID: 8014426944607209089, guid: b25f1edcb3c7a5b4a8c0480f0a5ecf94, type: 3}
     maintainPrefabCount: 2
     currentPrefabCount: 0
-  - prefab: {fileID: 1239135200595820803, guid: 6f3e1924c404256449133052287f6f7c, type: 3}
+  - prefab: {fileID: 4840580632373536635, guid: ec80601b2a227d54fa3939d41522bcfa, type: 3}
     maintainPrefabCount: 2
     currentPrefabCount: 0
   spawnPoints:
@@ -3377,6 +3377,7 @@ GameObject:
   - component: {fileID: 1852609039}
   - component: {fileID: 1852609041}
   - component: {fileID: 1852609043}
+  - component: {fileID: 1852609044}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3539,6 +3540,19 @@ MonoBehaviour:
   currentHealth: 0
   healthBar: {fileID: 213372301}
   damage: 10
+--- !u!114 &1852609044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852609035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3675a9ff2f198941ad8b65f029ce129, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
 --- !u!1 &1867327692
 GameObject:
   m_ObjectHideFlags: 0
