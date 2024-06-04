@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI; 
+using UnityEngine.SceneManagement;
 
 //Define a simple class to hold the information needed for each type of object.
 [Serializable]
@@ -76,6 +77,11 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Failed to load player data.");
         }
     } 
+
+    // Switch Scene to Options Menu 
+    public void BackToMain() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
+    }
 
     // Method to initialze the list of available spawn points 
     private void InitializeSpawnPoints() {
