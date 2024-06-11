@@ -9,11 +9,19 @@ public class PlayerMovement : MonoBehaviour
     private UnityEngine.Vector2 movement;  // Stores the player's movement input
     private float originalSpeed;  // To store the original movement speed
 
+    public Sprite frontSprite;  // Sprite for facing front
+    public Sprite backSprite;   // Sprite for facing back
+    public Sprite leftSprite;   // Sprite for facing left
+    public Sprite rightSprite;  // Sprite for facing right
+
+    private SpriteRenderer spriteRenderer;  // Reference to the SpriteRenderer component
+
     void Awake()
     {
         // Get the Rigidbody2D component attached to the player
         rb2D = GetComponent<Rigidbody2D>();
         originalSpeed = speed;  // Save the original move speed
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -21,6 +29,17 @@ public class PlayerMovement : MonoBehaviour
         // Get horizontal and vertical input (arrow keys or WASD keys)
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        // Change sprite based on movement direction
+        if (movement.x > 0) {
+            spriteRenderer.sprite = rightSprite;
+        } else if (movement.x < 0) {
+            spriteRenderer.sprite = leftSprite;
+        } else if (movement.y > 0) {
+            spriteRenderer.sprite = backSprite;
+        } else if (movement.y < 0) {
+            spriteRenderer.sprite = frontSprite;
+        }
     }
 
     void FixedUpdate()

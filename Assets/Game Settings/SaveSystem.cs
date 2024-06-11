@@ -1,7 +1,6 @@
 using UnityEngine;
-using System.IO; 
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Data.Common;
 
 public static class SaveSystem
 {
@@ -11,13 +10,12 @@ public static class SaveSystem
     public static void SavePlayer(GameManager gameManager)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        
         FileStream stream = new FileStream(path, FileMode.Create);
 
         // Get the position from the playerTransform in the GameManager
         Vector3 position = gameManager.playerTransform.position;
 
-        PlayerData data = new PlayerData(gameManager.playerHealth.currentHealth, 
+        PlayerData data = new PlayerData(gameManager.playerHealth.currentHealth,
         new float[] { position.x, position.y, position.z }, gameManager.TotalScore);
         
         try
@@ -32,18 +30,23 @@ public static class SaveSystem
         finally
         {
             stream.Close();
-        }  
+        }
     }
 
     public static PlayerData LoadPlayer()
     {
         if (File.Exists(path))
         {
-            BinaryFormatter formatter = new BinaryFormatter(); 
+            BinaryFormatter formatter = new BinaryFormatter();
             try
             {
                 using (FileStream stream = new FileStream(path, FileMode.Open))
                 {
+                    if (stream.Length == 0)
+                    {
+                        Debug.LogError("Save file is empty. Unable to load player data.");
+                        return null;
+                    }
                     PlayerData data = formatter.Deserialize(stream) as PlayerData;
                     Debug.Log("Player data loaded successfully.");
                     return data;
@@ -54,12 +57,16 @@ public static class SaveSystem
                 Debug.LogError("Failed to load player data: " + e.Message);
                 return null;
             }
-
+            catch (System.Runtime.Serialization.SerializationException e)
+            {
+                Debug.LogError("Failed to deserialize player data: " + e.Message);
+                return null;
+            }
         }
         else
         {
-            Debug.LogError("Saved File not found in " + path); 
-            return null; 
+            Debug.LogWarning("Save file not found in " + path);
+            return null;
         }
     }
 }
