@@ -24,38 +24,30 @@ public class SpeedBuff : MonoBehaviour, IMazeObject
     {
         Debug.Log("SpeedBuff OnTriggerEnter2D called.");
         // Check if the collision is with the player
-        if (collision.gameObject.CompareTag("Player"))
-        {
+        if (collision.gameObject.CompareTag("Player")) {
             Debug.Log("Player collided with speed buff.");
 
-            // Get the MovementScript component from the player
-            //MovementScript movementScript = collision.gameObject.GetComponent<MovementScript>();
-
             // Apply the speed buff if the MovementScript component is found
-            if (playerMovement != null)
-            {
+            if (playerMovement != null) {
                 Debug.Log("Applying speed buff: " + speedIncrease + " for " + duration + " seconds.");
                 playerMovement.StartSpeedBuff(speedIncrease, duration);
-            }
-            else
-            {
+            } else {
                 Debug.LogError("MovementScript component is not found.");
             }
-            //lkl
 
             // Destroy the speed buff and notify the GameManager
             Destroy(gameObject);  // Destroy the speed buff
             Debug.Log("Speed buff destroyed.");
+
             if (m_GameManager != null) {
                 Debug.Log("Notifying GameManager about destroyed prefab.");
+                // Notify gameManager that a prefab has been destroyed 
                 m_GameManager.PrefabDestroyed(m_ObjectIndex, transform.position);
                 Debug.Log("GameManager notified.");
             } else {
                 Debug.LogError("GameManager reference is missing.");
             }
-        }
-        else
-        {
+        } else {
             Debug.Log("Collided with non-player object: " + collision.gameObject.name);
         }
     }

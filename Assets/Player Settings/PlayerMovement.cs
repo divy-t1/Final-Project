@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public Sprite leftSprite;   // Sprite for facing left
     public Sprite rightSprite;  // Sprite for facing right
 
-    private SpriteRenderer spriteRenderer;  // Reference to the SpriteRenderer component
+    private SpriteRenderer spriteRenderer;  // Reference to the SpriteRenderer component of the player 
 
     void Awake()
     {
@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         // Calculate the new position of the player based on the input and movement speed
         UnityEngine.Vector2 newPosition = rb2D.position + movement * speed * Time.fixedDeltaTime;
 
-        // Move the player's Rigidbody2D to the new position using MovePosition
+        // Move the player's Rigidbody2D to the new position using the method MovePosition
         rb2D.MovePosition(newPosition);
     }
 
